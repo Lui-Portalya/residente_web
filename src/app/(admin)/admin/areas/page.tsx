@@ -35,36 +35,36 @@ export default function AreasPage() {
         <ActionForm action={saveAreaAction} submitLabel="Create area"><AreaFields /></ActionForm>
       </details>
 
+      <div className="cards">
       {areas.map((a) => (
-        <details className="card" key={a.id}>
+        <details className="card item" key={a.id}>
           <summary>
-            <strong>{a.name}</strong> · {a.open_time}–{a.close_time} · {a.slot_minutes} min · {a.fee_cents ? formatMoney(a.fee_cents) : "free"}{" "}
-            <span className={`badge ${a.active ? "ok" : "off"}`}>{a.active ? "active" : "inactive"}</span>
+            <span className="item-title">
+              {a.name}
+              <span className={`badge ${a.active ? "ok" : "off"}`}>{a.active ? "active" : "inactive"}</span>
+            </span>
+            <span className="item-meta"><span>{a.open_time}–{a.close_time}</span><span>{a.slot_minutes} min slots</span></span>
+            <span className="item-meta"><span>{a.fee_cents ? formatMoney(a.fee_cents) : "Free"}</span>{a.capacity > 0 && <span>Capacity {a.capacity}</span>}</span>
           </summary>
           <ActionForm action={saveAreaAction} submitLabel="Save changes"><AreaFields a={a} /></ActionForm>
         </details>
       ))}
+      </div>
 
       <h2>Upcoming reservations</h2>
-      <div className="card table-wrap">
-        <table>
-          <thead><tr><th>Area</th><th>When</th><th>Residence</th><th /></tr></thead>
-          <tbody>
-            {upcoming.map((v) => (
-              <tr key={v.id}>
-                <td>{v.area_name}</td><td>{formatDateTime(v.start_at)}–{v.end_at.slice(11)}</td><td>{v.residence_code}</td>
-                <td>
-                  <form action={adminCancelReservationAction}>
-                    <input type="hidden" name="id" value={v.id} />
-                    <ConfirmButton message="Cancel this reservation?">Cancel</ConfirmButton>
-                  </form>
-                </td>
-              </tr>
-            ))}
-            {upcoming.length === 0 && <tr><td colSpan={4} className="muted">Nothing booked.</td></tr>}
-          </tbody>
-        </table>
+      <div className="cards">
+        {upcoming.map((v) => (
+          <div className="card" key={v.id}>
+            <div className="card-head"><strong>{v.area_name}</strong><span className="badge">{v.residence_code}</span></div>
+            <div className="muted">{formatDateTime(v.start_at)}–{v.end_at.slice(11)}</div>
+            <form action={adminCancelReservationAction} className="card-actions">
+              <input type="hidden" name="id" value={v.id} />
+              <ConfirmButton message="Cancel this reservation?">Cancel</ConfirmButton>
+            </form>
+          </div>
+        ))}
       </div>
+      {upcoming.length === 0 && <p className="muted">Nothing booked.</p>}
     </>
   );
 }

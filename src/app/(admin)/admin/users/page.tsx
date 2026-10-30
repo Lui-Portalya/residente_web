@@ -40,43 +40,36 @@ export default async function UsersPage({ searchParams }: { searchParams: Promis
         </ActionForm>
       </details>
 
-      <div className="card table-wrap">
-        <table>
-          <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Residence</th><th>Status</th></tr></thead>
-          <tbody>
-            {users.map((u) => (
-              <tr key={u.id}>
-                <td colSpan={5} style={{ padding: 0 }}>
-                  <details>
-                    <summary style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 8, padding: 8, cursor: "pointer" }}>
-                      <span>{u.name}</span><span>{u.email}</span><span>{u.role}</span><span>{u.residence_code ?? "—"}</span>
-                      <span className={`badge ${u.active ? "ok" : "off"}`} style={{ justifySelf: "start" }}>{u.active ? "active" : "inactive"}</span>
-                    </summary>
-                    <div style={{ padding: 12 }}>
-                      <ActionForm action={updateUserAction} submitLabel="Save changes">
-                        <input type="hidden" name="id" value={u.id} />
-                        <label>Name<input name="name" defaultValue={u.name} required /></label>
-                        <label>Email<input name="email" type="email" defaultValue={u.email} required /></label>
-                        <label>Role
-                          <select name="role" defaultValue={u.role}><option value="resident">Resident</option><option value="admin">Admin</option></select>
-                        </label>
-                        {residenceSelect(u.residence_id)}
-                        <label className="check"><input type="checkbox" name="active" defaultChecked={!!u.active} /> Active</label>
-                      </ActionForm>
-                      <h2>Reset password</h2>
-                      <ActionForm action={resetPasswordAction} className="row" submitLabel="Reset" submitClass="secondary">
-                        <input type="hidden" name="id" value={u.id} />
-                        <label>New password<input name="password" type="password" minLength={8} autoComplete="new-password" required /></label>
-                      </ActionForm>
-                    </div>
-                  </details>
-                </td>
-              </tr>
-            ))}
-            {users.length === 0 && <tr><td colSpan={5} className="muted">No users found.</td></tr>}
-          </tbody>
-        </table>
+      <div className="cards">
+        {users.map((u) => (
+          <details className="card item" key={u.id}>
+            <summary>
+              <span className="item-title">
+                {u.name}
+                <span className={`badge ${u.active ? "ok" : "off"}`}>{u.active ? "active" : "inactive"}</span>
+              </span>
+              <span className="item-meta"><span>{u.email}</span></span>
+              <span className="item-meta"><span>{u.role}</span><span>Residence: {u.residence_code ?? "—"}</span></span>
+            </summary>
+            <ActionForm action={updateUserAction} submitLabel="Save changes">
+              <input type="hidden" name="id" value={u.id} />
+              <label>Name<input name="name" defaultValue={u.name} required /></label>
+              <label>Email<input name="email" type="email" defaultValue={u.email} required /></label>
+              <label>Role
+                <select name="role" defaultValue={u.role}><option value="resident">Resident</option><option value="admin">Admin</option></select>
+              </label>
+              {residenceSelect(u.residence_id)}
+              <label className="check"><input type="checkbox" name="active" defaultChecked={!!u.active} /> Active</label>
+            </ActionForm>
+            <h2>Reset password</h2>
+            <ActionForm action={resetPasswordAction} className="row" submitLabel="Reset" submitClass="secondary">
+              <input type="hidden" name="id" value={u.id} />
+              <label>New password<input name="password" type="password" minLength={8} autoComplete="new-password" required /></label>
+            </ActionForm>
+          </details>
+        ))}
       </div>
+      {users.length === 0 && <p className="muted">No users found.</p>}
     </>
   );
 }

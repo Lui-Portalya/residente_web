@@ -40,11 +40,16 @@ export default function ResidencesPage() {
         </ActionForm>
       </div>
 
+      <div className="cards">
       {residences.map((r) => (
-        <details className="card" key={r.id}>
+        <details className="card item" key={r.id}>
           <summary>
-            <strong>{r.code}</strong> · {formatMoney(r.monthly_fee_cents)}/mo · {r.residents} resident(s){" "}
-            <span className={`badge ${r.active ? "ok" : "off"}`}>{r.active ? "active" : "inactive"}</span>
+            <span className="item-title">
+              {r.code}
+              <span className={`badge ${r.active ? "ok" : "off"}`}>{r.active ? "active" : "inactive"}</span>
+            </span>
+            <span className="item-meta"><span>{r.address || "No address"}</span></span>
+            <span className="item-meta"><span>{formatMoney(r.monthly_fee_cents)}/mo</span><span>{r.residents} resident(s)</span></span>
           </summary>
           <ActionForm action={saveResidenceAction} submitLabel="Save changes"><ResidenceFields r={r} /></ActionForm>
           <form action={deleteResidenceAction} style={{ marginTop: 12 }}>
@@ -53,6 +58,7 @@ export default function ResidencesPage() {
           </form>
         </details>
       ))}
+      </div>
       {residences.length === 0 && <p className="muted">No residences yet.</p>}
     </>
   );

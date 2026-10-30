@@ -57,12 +57,12 @@ export default async function AgendaPage({ searchParams }: { searchParams: Promi
           const end = fromMinutes(toMinutes(start) + area.slot_minutes);
           return (
             <div key={start} className={`slot ${b ? (mine ? "mine" : "booked") : ""} ${past ? "past" : ""}`}>
-              <span>{start}–{end}</span>
+              <span className="time">{start}–{end}</span>
               {b ? (
                 <span>
                   {mine ? "Your booking" : `Booked by ${b.residence_code}`}
                   {mine && !past && (
-                    <form action={cancelOwnReservationAction} style={{ display: "inline", marginLeft: 8 }}>
+                    <form action={cancelOwnReservationAction} style={{ marginTop: 8 }}>
                       <input type="hidden" name="id" value={b.id} />
                       <ConfirmButton message="Cancel this booking?">Cancel</ConfirmButton>
                     </form>

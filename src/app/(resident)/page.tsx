@@ -26,15 +26,16 @@ export default async function HomePage() {
       </div>
 
       <h2>Pending charges</h2>
-      <div className="card table-wrap">
-        <table>
-          <thead><tr><th>Description</th><th>Due</th><th>Remaining</th></tr></thead>
-          <tbody>
-            {pending.map((c) => <tr key={c.id}><td>{c.description}</td><td>{formatDate(c.due_date)}</td><td>{formatMoney(c.amount_cents - c.paid_cents)}</td></tr>)}
-            {pending.length === 0 && <tr><td colSpan={3} className="muted">You are all caught up.</td></tr>}
-          </tbody>
-        </table>
+      <div className="cards">
+        {pending.map((c) => (
+          <div className="card" key={c.id}>
+            <div className="card-head"><strong>{c.description}</strong><span className="badge warn">due {formatDate(c.due_date)}</span></div>
+            <div className="stat">{formatMoney(c.amount_cents - c.paid_cents)}</div>
+            <div className="muted">{c.type === "maintenance" ? "Maintenance" : "Common area"}</div>
+          </div>
+        ))}
       </div>
+      {pending.length === 0 && <p className="muted">You are all caught up.</p>}
 
       <h2>Recent payments</h2>
       <div className="card table-wrap">
@@ -48,14 +49,15 @@ export default async function HomePage() {
       </div>
 
       <h2>Next bookings</h2>
-      <div className="card table-wrap">
-        <table>
-          <tbody>
-            {bookings.map((b) => <tr key={b.id}><td>{b.area_name}</td><td>{formatDateTime(b.start_at)}–{b.end_at.slice(11)}</td></tr>)}
-            {bookings.length === 0 && <tr><td className="muted">Nothing booked.</td></tr>}
-          </tbody>
-        </table>
+      <div className="cards">
+        {bookings.map((b) => (
+          <div className="card" key={b.id}>
+            <div className="card-head"><strong>{b.area_name}</strong></div>
+            <div className="muted">{formatDateTime(b.start_at)}–{b.end_at.slice(11)}</div>
+          </div>
+        ))}
       </div>
+      {bookings.length === 0 && <p className="muted">Nothing booked.</p>}
     </>
   );
 }

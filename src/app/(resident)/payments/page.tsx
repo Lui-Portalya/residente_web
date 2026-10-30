@@ -19,13 +19,14 @@ export default async function PaymentsPage() {
       <h1>Payments</h1>
       <h2>Pending charges</h2>
       {pending.length === 0 && <p className="muted">Nothing to pay right now.</p>}
+      <div className="cards">
       {pending.map((c) => {
         const remaining = c.amount_cents - c.paid_cents;
         return (
-          <details className="card" key={c.id}>
+          <details className="card item" key={c.id}>
             <summary>
-              <strong>{c.description}</strong> · {c.type === "maintenance" ? "Maintenance" : "Common area"} · due {formatDate(c.due_date)} ·{" "}
-              {formatMoney(remaining)} remaining
+              <span className="item-title">{c.description}<span className="badge warn">due {formatDate(c.due_date)}</span></span>
+              <span className="item-meta"><span>{c.type === "maintenance" ? "Maintenance" : "Common area"}</span><span>{formatMoney(remaining)} remaining</span></span>
             </summary>
             <ActionForm action={registerPaymentAction} submitLabel="Register payment">
               <input type="hidden" name="chargeId" value={c.id} />
@@ -42,6 +43,7 @@ export default async function PaymentsPage() {
           </details>
         );
       })}
+      </div>
 
       <h2>History</h2>
       <div className="card table-wrap">
